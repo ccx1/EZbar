@@ -14,10 +14,11 @@ import net.sourceforge.zbar.ImageScanner;
 import net.sourceforge.zbar.Symbol;
 import net.sourceforge.zbar.SymbolSet;
 
-public class ScannerView extends FrameLayout implements Camera.PreviewCallback, Camera.AutoFocusCallback {
+public class ScannerView extends FrameLayout implements Camera.PreviewCallback, Camera.AutoFocusCallback, CameraManager.onStatusChangeListener {
     private Handler      mMainHanlder;
     private Context      mContext;
     private ImageScanner scanner;
+    private boolean      isPreview;
 
     static {
         System.loadLibrary("iconv");
@@ -50,6 +51,7 @@ public class ScannerView extends FrameLayout implements Camera.PreviewCallback, 
         scanner.setConfig(0, Config.Y_DENSITY, 3);
         ViewfinderView viewfinderView = new ViewfinderView(mContext, null);
         this.addView(viewfinderView);
+        mCameraManager.setOnStatusChangeListener(this);
     }
 
     @Override
@@ -96,7 +98,14 @@ public class ScannerView extends FrameLayout implements Camera.PreviewCallback, 
 
     private Runnable doAutoFocus = new Runnable() {
         public void run() {
-            mCameraManager.autoFocus();
+            if (isPreview) {
+                mCameraManager.autoFocus();
+            }
         }
     };
+
+    @Override
+    public void onChange(int status) {
+        isPreview = status != 0;
+    }
 }

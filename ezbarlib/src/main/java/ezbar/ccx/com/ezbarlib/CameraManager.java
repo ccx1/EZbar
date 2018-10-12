@@ -5,8 +5,12 @@ import android.view.View;
 
 public class CameraManager {
 
-    private View   mScannerView;
-    private Camera mCamera;
+    private View    mScannerView;
+    private Camera  mCamera;
+    private boolean isScan;
+    public static final int START = 1;
+    public static final int STOP  = 0;
+
 
     public CameraManager(View view) {
         this.mScannerView = view;
@@ -39,11 +43,19 @@ public class CameraManager {
     public void stop() {
         mCamera.setPreviewCallback(null);
         mCamera.stopPreview();
+        isScan = false;
+        if (mOnStatusChangeListener != null) {
+            mOnStatusChangeListener.onChange(STOP);
+        }
     }
 
     public void start() {
         try {
             mCamera.startPreview();
+            isScan = true;
+            if (mOnStatusChangeListener != null) {
+                mOnStatusChangeListener.onChange(START);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -75,5 +87,15 @@ public class CameraManager {
             }
 
         }
+    }
+
+    private onStatusChangeListener mOnStatusChangeListener;
+
+    public void setOnStatusChangeListener(onStatusChangeListener onStatusChangeListener) {
+        mOnStatusChangeListener = onStatusChangeListener;
+    }
+
+    public interface onStatusChangeListener {
+        void onChange(int status);
     }
 }

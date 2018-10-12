@@ -21,6 +21,7 @@ import java.io.IOException;
  */
 @SuppressLint("ViewConstructor")
 class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
+    private CameraManager     manager;
     private SurfaceHolder     mHolder;
     private Camera            mCamera;
     private PreviewCallback   previewCallback;
@@ -31,14 +32,13 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
                          AutoFocusCallback autoFocusCb) {
         super(context);
         mCamera = camera.getCameraInstance();
+        this.manager = camera;
         previewCallback = previewCb;
         autoFocusCallback = autoFocusCb;
-
         // Install a SurfaceHolder.Callback so we get notified when the
         // underlying surface is created and destroyed.
         mHolder = getHolder();
         mHolder.addCallback(this);
-
         // deprecated setting, but required on Android versions prior to 3.0
         mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
     }
@@ -68,7 +68,8 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
 
         // stop preview before making changes
         try {
-            mCamera.stopPreview();
+//            mCamera.stopPreview();
+            manager.stop();
         } catch (Exception e) {
             // ignore: tried to stop a non-existent preview
         }
@@ -77,9 +78,7 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
             // Hard code camera surface rotation 90 degs to match Activity view in portrait
             mCamera.setDisplayOrientation(90);
             mCamera.setPreviewDisplay(mHolder);
-            mCamera.setPreviewCallback(previewCallback);
-            mCamera.startPreview();
-            mCamera.autoFocus(autoFocusCallback);
+            manager.reset();
         } catch (Exception e) {
             Log.d("DBG", "Error starting camera preview: " + e.getMessage());
         }
