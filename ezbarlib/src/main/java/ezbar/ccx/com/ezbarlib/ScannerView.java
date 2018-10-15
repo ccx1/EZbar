@@ -26,6 +26,7 @@ public class ScannerView extends FrameLayout implements Camera.PreviewCallback, 
 
     private CameraManager           mCameraManager;
     private ParsingCompleteListener parsingCompleteListener;
+    private ViewfinderView          mViewfinderView;
 
     public ScannerView(@NonNull Context context) {
         this(context, null);
@@ -49,8 +50,8 @@ public class ScannerView extends FrameLayout implements Camera.PreviewCallback, 
         scanner = new ImageScanner();
         scanner.setConfig(0, Config.X_DENSITY, 3);
         scanner.setConfig(0, Config.Y_DENSITY, 3);
-        ViewfinderView viewfinderView = new ViewfinderView(mContext, null);
-        this.addView(viewfinderView);
+        mViewfinderView = new ViewfinderView(mContext, null);
+        this.addView(mViewfinderView);
         mCameraManager.setOnStatusChangeListener(this);
     }
 
@@ -108,4 +109,15 @@ public class ScannerView extends FrameLayout implements Camera.PreviewCallback, 
     public void onChange(int status) {
         isPreview = status != 0;
     }
+
+
+    public void setScanWidthAndHeight(int tailor) {
+        mViewfinderView.setScanWidthAndHeight(tailor);
+    }
+
+
+    public void setScanRectColor(int scanRectColor) {
+        mViewfinderView.setScanRectColor(scanRectColor);
+    }
+
 }

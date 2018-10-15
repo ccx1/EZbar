@@ -21,15 +21,15 @@ public final class ViewfinderView extends View {
     private static final int  POINT_SIZE      = 6;
 
     private final Paint   paint;
-    private       Bitmap  resultBitmap;
     private final int     maskColor;
-    private final int     resultColor;
     //    private final int               laserColor;
     private       boolean isDraw;
     private int mBottom = -1;
     private int mTop    = -1;
     private Shader mShader;
     private Rect   mRect;
+    private int    mTailor;
+    private int ScanRectColor;
 
     // This constructor is used when the class is built from an XML resource.
     public ViewfinderView(Context context, AttributeSet attrs) {
@@ -38,7 +38,7 @@ public final class ViewfinderView extends View {
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         Resources resources = getResources();
         maskColor = resources.getColor(R.color.viewfinder_mask);
-        resultColor = resources.getColor(R.color.result_view);
+        ScanRectColor = Color.WHITE;
     }
 
     @SuppressLint("DrawAllocation")
@@ -53,19 +53,24 @@ public final class ViewfinderView extends View {
         int YCenter = height / 2;
 
 //        如果要一个方形，那么需要取到两个的方形点
-        int tailor = XCenter / 4 * 3;
+        int tailor;
+        if (mTailor == -1) {
+            tailor = XCenter / 4 * 3;
+        } else {
+            tailor = mTailor;
+        }
+
         // 存放框的高度宽度信息
         Rect frame = new Rect(XCenter - tailor, YCenter - tailor, XCenter + tailor, YCenter + tailor);
-//        Rect frame = new Rect();
 
         // Draw the exterior (i.e. outside the framing rect) darkened
-        paint.setColor(resultBitmap != null ? resultColor : maskColor);
+        paint.setColor(maskColor);
         canvas.drawRect(0, 0, width, frame.top, paint);
         canvas.drawRect(0, frame.top, frame.left, frame.bottom + 1, paint);
         canvas.drawRect(frame.right + 1, frame.top, width, frame.bottom + 1, paint);
         canvas.drawRect(0, frame.bottom + 1, width, height, paint);
 
-        paint.setColor(Color.WHITE);
+        paint.setColor(ScanRectColor);
 
         paint.setStrokeWidth(10f);
         Path path = new Path();
@@ -134,8 +139,14 @@ public final class ViewfinderView extends View {
                 frame.top - POINT_SIZE,
                 frame.right + POINT_SIZE,
                 frame.bottom + POINT_SIZE);
-
-
     }
 
+    public void setScanWidthAndHeight(int tailor) {
+        mTailor = tailor;
+    }
+
+
+    public void setScanRectColor(int scanRectColor) {
+        ScanRectColor = scanRectColor;
+    }
 }

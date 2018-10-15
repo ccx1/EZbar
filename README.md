@@ -62,7 +62,3 @@ onComplete是扫码完成的回调
 
         mScannerView.openFlash(isOpen);
 
-
-## 可能会崩,因为我没写权限.
-## 可能会崩,因为我没写权限.
-## 可能会崩,因为我没写权限.
