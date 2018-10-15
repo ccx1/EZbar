@@ -5,6 +5,8 @@ Zbar二维码扫码器,贼简单
 <img src="/gif/img.gif" width="320px" />
 
 ### 如何使用
+[ ![Download](https://api.bintray.com/packages/ci250454344/EZbar/EZbar/images/download.svg) ](https://bintray.com/ci250454344/EZbar/EZbar/_latestVersion)
+
 
 在工程gralde中加入
 
