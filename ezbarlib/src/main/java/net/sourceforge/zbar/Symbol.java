@@ -25,175 +25,272 @@
 
 package net.sourceforge.zbar;
 
-/** Immutable container for decoded result symbols associated with an image
+import android.os.Build;
+
+/**
+ * Immutable container for decoded result symbols associated with an image
  * or a composite symbol.
  */
-public class Symbol
-{
-    /** No symbol decoded. */
-    public static final int NONE = 0;
-    /** Symbol detected but not decoded. */
+public class Symbol {
+    /**
+     * No symbol decoded.
+     */
+    public static final int NONE    = 0;
+    /**
+     * Symbol detected but not decoded.
+     */
     public static final int PARTIAL = 1;
 
-    /** EAN-8. */
-    public static final int EAN8 = 8;
-    /** UPC-E. */
-    public static final int UPCE = 9;
-    /** ISBN-10 (from EAN-13). */
-    public static final int ISBN10 = 10;
-    /** UPC-A. */
-    public static final int UPCA = 12;
-    /** EAN-13. */
-    public static final int EAN13 = 13;
-    /** ISBN-13 (from EAN-13). */
-    public static final int ISBN13 = 14;
-    /** Interleaved 2 of 5. */
-    public static final int I25 = 25;
-    /** DataBar (RSS-14). */
-    public static final int DATABAR = 34;
-    /** DataBar Expanded. */
+    /**
+     * EAN-8.
+     */
+    public static final int EAN8        = 8;
+    /**
+     * UPC-E.
+     */
+    public static final int UPCE        = 9;
+    /**
+     * ISBN-10 (from EAN-13).
+     */
+    public static final int ISBN10      = 10;
+    /**
+     * UPC-A.
+     */
+    public static final int UPCA        = 12;
+    /**
+     * EAN-13.
+     */
+    public static final int EAN13       = 13;
+    /**
+     * ISBN-13 (from EAN-13).
+     */
+    public static final int ISBN13      = 14;
+    /**
+     * Interleaved 2 of 5.
+     */
+    public static final int I25         = 25;
+    /**
+     * DataBar (RSS-14).
+     */
+    public static final int DATABAR     = 34;
+    /**
+     * DataBar Expanded.
+     */
     public static final int DATABAR_EXP = 35;
-    /** Codabar. */
-    public static final int CODABAR = 38;
-    /** Code 39. */
-    public static final int CODE39 = 39;
-    /** PDF417. */
-    public static final int PDF417 = 57;
-    /** QR Code. */
-    public static final int QRCODE = 64;
-    /** Code 93. */
-    public static final int CODE93 = 93;
-    /** Code 128. */
-    public static final int CODE128 = 128;
+    /**
+     * Codabar.
+     */
+    public static final int CODABAR     = 38;
+    /**
+     * Code 39.
+     */
+    public static final int CODE39      = 39;
+    /**
+     * PDF417.
+     */
+    public static final int PDF417      = 57;
+    /**
+     * QR Code.
+     */
+    public static final int QRCODE      = 64;
+    /**
+     * Code 93.
+     */
+    public static final int CODE93      = 93;
+    /**
+     * Code 128.
+     */
+    public static final int CODE128     = 128;
 
-    /** C pointer to a zbar_symbol_t. */
+    /**
+     * C pointer to a zbar_symbol_t.
+     */
     private long peer;
 
-    /** Cached attributes. */
+    /**
+     * Cached attributes.
+     */
     private int type;
 
-    static
-    {
+    static {
         System.loadLibrary("zbarjni");
         init();
     }
+
     private static native void init();
 
-    /** Symbols are only created by other package methods. */
-    Symbol (long peer)
-    {
+    /**
+     * Symbols are only created by other package methods.
+     */
+    Symbol(long peer) {
         this.peer = peer;
     }
 
-    protected void finalize ()
-    {
+    protected void finalize() {
         destroy();
     }
 
-    /** Clean up native data associated with an instance. */
-    public synchronized void destroy ()
-    {
-        if(peer != 0) {
+    /**
+     * Clean up native data associated with an instance.
+     */
+    public synchronized void destroy() {
+        if (peer != 0) {
             destroy(peer);
             peer = 0;
         }
     }
 
-    /** Release the associated peer instance.  */
+    /**
+     * Release the associated peer instance.
+     */
     private native void destroy(long peer);
 
-    /** Retrieve type of decoded symbol. */
-    public int getType ()
-    {
-        if(type == 0)
+    /**
+     * Retrieve type of decoded symbol.
+     * @return int
+     */
+    public int getType() {
+        if (type == 0)
             type = getType(peer);
-        return(type);
+        return (type);
     }
 
     private native int getType(long peer);
 
-    /** Retrieve symbology boolean configs settings used during decode. */
+    /**
+     * Retrieve symbology boolean configs settings used during decode.
+     * @return int
+     */
     public native int getConfigMask();
 
-    /** Retrieve symbology characteristics detected during decode. */
+    /**
+     * Retrieve symbology characteristics detected during decode.
+     * @return int
+     */
     public native int getModifierMask();
 
-    /** Retrieve data decoded from symbol as a String. */
+    /**
+     * Retrieve data decoded from symbol as a String.
+     * @return String
+     */
     public native String getData();
 
-    /** Retrieve raw data bytes decoded from symbol. */
+    /**
+     * Retrieve raw data bytes decoded from symbol.
+     * @return byte[]
+     */
     public native byte[] getDataBytes();
 
-    /** Retrieve a symbol confidence metric.  Quality is an unscaled,
+    /**
+     * Retrieve a symbol confidence metric.  Quality is an unscaled,
      * relative quantity: larger values are better than smaller
      * values, where "large" and "small" are application dependent.
+     * @return int
      */
     public native int getQuality();
 
-    /** Retrieve current cache count.  When the cache is enabled for
+    /**
+     * Retrieve current cache count.  When the cache is enabled for
      * the image_scanner this provides inter-frame reliability and
      * redundancy information for video streams.
-     * @returns < 0 if symbol is still uncertain
-     * @returns 0 if symbol is newly verified
-     * @returns > 0 for duplicate symbols
+     *
+     * @return int
      */
     public native int getCount();
 
-    /** Retrieve an approximate, axis-aligned bounding box for the
+    /**
+     * Retrieve an approximate, axis-aligned bounding box for the
      * symbol.
+     * @return int[]
      */
-    public int[] getBounds ()
-    {
+    public int[] getBounds() {
         int n = getLocationSize(peer);
-        if(n <= 0)
-            return(null);
+        if (n <= 0)
+            return (null);
 
         int[] bounds = new int[4];
-        int xmin = Integer.MAX_VALUE;
-        int xmax = Integer.MIN_VALUE;
-        int ymin = Integer.MAX_VALUE;
-        int ymax = Integer.MIN_VALUE;
+        int   xmin   = Integer.MAX_VALUE;
+        int   xmax   = Integer.MIN_VALUE;
+        int   ymin   = Integer.MAX_VALUE;
+        int   ymax   = Integer.MIN_VALUE;
 
-        for(int i = 0; i < n; i++) {
+        for (int i = 0; i < n; i++) {
             int x = getLocationX(peer, i);
-            if(xmin > x) xmin = x;
-            if(xmax < x) xmax = x;
+            if (xmin > x) xmin = x;
+            if (xmax < x) xmax = x;
 
             int y = getLocationY(peer, i);
-            if(ymin > y) ymin = y;
-            if(ymax < y) ymax = y;
+            if (ymin > y) ymin = y;
+            if (ymax < y) ymax = y;
         }
         bounds[0] = xmin;
         bounds[1] = ymin;
         bounds[2] = xmax - xmin;
         bounds[3] = ymax - ymin;
-        return(bounds);
+        return (bounds);
     }
 
+    /**
+     *
+     * @param peer
+     * @return
+     */
     private native int getLocationSize(long peer);
+
+    /**
+     *
+     * @param peer
+     * @param idx
+     * @return
+     */
     private native int getLocationX(long peer, int idx);
+
+    /**
+     *
+     * @param peer
+     * @param idx
+     * @return int
+     */
     private native int getLocationY(long peer, int idx);
 
-    public int[] getLocationPoint (int idx)
-    {
+    /**
+     *
+     * @param idx int
+     * @return int[]
+     */
+    public int[] getLocationPoint(int idx) {
         int[] p = new int[2];
         p[0] = getLocationX(peer, idx);
         p[1] = getLocationY(peer, idx);
-        return(p);
+        return (p);
     }
 
-    /** Retrieve general axis-aligned, orientation of decoded
+    /**
+     * Retrieve general axis-aligned, orientation of decoded
      * symbol.
+     * @return int
      */
     public native int getOrientation();
 
-    /** Retrieve components of a composite result. */
-    public SymbolSet getComponents ()
-    {
-        return(new SymbolSet(getComponents(peer)));
+    /**
+     * Retrieve components of a composite result.
+     *
+     * @return SymbolSet
+     */
+    public SymbolSet getComponents() {
+        return (new SymbolSet(getComponents(peer)));
     }
 
+    /**
+     * @param peer
+     * @return long
+     */
     private native long getComponents(long peer);
 
+
+    /**
+     *
+     * @return long
+     */
     native long next();
 }

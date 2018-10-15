@@ -6,6 +6,21 @@ Zbar二维码扫码器,贼简单
 
 ### 如何使用
 
+在工程gralde中加入
+
+      implementation 'com.ccx1:EZbar:1.0.0'
+
+
+在project的gradle中的allprojects中加入
+
+
+        allprojects {
+            repositories {
+                google()
+                jcenter()
+                maven {url 'https://dl.bintray.com/ci250454344/EZbar/'}
+            }
+        }
 
 
 在布局中添加ScannerView

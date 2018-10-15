@@ -18,6 +18,7 @@ public class CameraManager {
 
     /**
      * A safe way to get an instance of the Camera object.
+     * @return Camera
      */
     public Camera getCameraInstance() {
         Camera c = null;
