@@ -28,7 +28,7 @@ public final class ViewfinderView extends View {
     private int mTop    = -1;
     private Shader mShader;
     private Rect   mRect;
-    private int    mTailor;
+    private int mTailor = -1;
     private int ScanRectColor;
 
     // This constructor is used when the class is built from an XML resource.

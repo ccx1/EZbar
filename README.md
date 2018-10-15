@@ -8,7 +8,7 @@ Zbar二维码扫码器,贼简单
 
 在工程gralde中加入
 
-      implementation 'com.ccx1:EZbar:1.0.0'
+      implementation 'com.ccx1:EZbar:1.0.3'
 
 
 在project的gradle中的allprojects中加入
@@ -42,6 +42,15 @@ java代码
         });
 
 onComplete是扫码完成的回调
+
+提供了一个设置扫码框大小的方法
+
+        mScannerView.setScanWidthAndHeight(200);
+
+
+提供了一个设置扫码框颜色的方法
+
+        mScannerView.setScanRectColor(Color.RED);
 
 提供了一个扫码结束之后重置的方法，非常关键
 

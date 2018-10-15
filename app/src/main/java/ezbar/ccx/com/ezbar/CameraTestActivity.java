@@ -10,6 +10,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -40,13 +41,14 @@ public class CameraTestActivity extends Activity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 100);
             return;
         }
-
         initScan();
     }
 
     private void initScan() {
         mScannerView = new ScannerView(this);
         ((ViewGroup) findViewById(R.id.cameraPreview)).addView(mScannerView);
+        mScannerView.setScanRectColor(Color.RED);
+        mScannerView.setScanWidthAndHeight(200);
         mScannerView.setOnParsingCompleteListener(new ParsingCompleteListener() {
             @Override
             public void onComplete(String text, String handingTime) {
