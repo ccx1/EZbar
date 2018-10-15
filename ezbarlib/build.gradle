@@ -9,9 +9,8 @@ android {
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 28
-        versionCode 1
+        versionCode 2
         versionName "1.0"
-
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
@@ -49,7 +48,7 @@ publish {
     userOrg = 'ci250454344'           //bintray注册的用户名
     groupId = 'com.ccx1'            //compile引用时的第1部分groupId
     artifactId = 'EZbar'       //compile引用时的第2部分项目名
-    publishVersion = '1.0.1'       //compile引用时的第3部分版本号
+    publishVersion = '1.0.2'       //compile引用时的第3部分版本号
     desc = 'This is a zbar library for Android'
     website = 'https://github.com/ccx1/EZbar'
 }
